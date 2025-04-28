@@ -1,3 +1,12 @@
+terraform {
+  backend "s3" {
+    bucket         = "myhellobucket-132"
+    key            = "hello-app/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-lock"
+  }
+}
+
 provider "aws" {
   region = var.region
 }
