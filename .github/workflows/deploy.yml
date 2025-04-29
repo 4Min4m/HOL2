@@ -21,19 +21,31 @@ jobs:
         run: npm install
         working-directory: ./hello-app
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
+      - name: Configure AWS Credentials
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set default.region us-east-1
       - name: Test AWS Credentials
         run: aws sts get-caller-identity
+
+      - name: Test S3 Access
+        run: aws s3 ls s3://myhellobucket-132
+
+      - name: Install Terraform
+        run: |
+          wget -O terraform.zip https://releases.hashicorp.com/terraform/1.5.0/terraform_1.5.0_linux_amd64.zip
+          unzip terraform.zip
+          sudo mv terraform /usr/local/bin/
+          terraform --version
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./hello-app/terraform
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-1
-      - name: Terraform Init
-        run: terraform init
-        working-directory: ./hello-app/terraform
 
       - name: Terraform Plan
         run: terraform plan
