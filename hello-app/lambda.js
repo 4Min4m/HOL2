@@ -28,7 +28,7 @@ exports.handler = async (event) => {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*"
                 },
-                body: JSON.stringify({ message: "HELLLOOOOOO!" })
+                body: JSON.stringify({ message: "Hello Nirvana Khoshgeleeeeeee!" })
             };
         }
     } catch (error) {
